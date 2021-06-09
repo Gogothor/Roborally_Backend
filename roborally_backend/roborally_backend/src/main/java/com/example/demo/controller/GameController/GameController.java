@@ -31,9 +31,21 @@ public class GameController {
     @GetMapping("/board/{boardId}")
     public ResponseEntity<BoardDto> getBoard(@PathVariable("boardId") int boardId) throws ServiceException, MappingException, DaoException {
         Board board = gameService.getBoard(boardId);
+
         return new ResponseEntity<>(dtoMapper.convertToDto(board), HttpStatus.OK);
     }
 
+    @GetMapping("/board/all")
+    public ResponseEntity<BoardDto[]> getBoardList() throws ServiceException, MappingException, DaoException{
+        Board[] boards = gameService.getBoardList();
+        BoardDto[] boardDtos = new BoardDto[boards.length];
+
+        for (int i = 0; i < boards.length ; i++) {
+            boardDtos[i] = dtoMapper.convertToDto(boards[i]);
+        }
+
+        return new ResponseEntity<>(boardDtos, HttpStatus.OK);
+    }
 
     /**
      * Get current player of a board

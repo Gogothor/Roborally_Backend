@@ -5,9 +5,13 @@ import com.example.demo.exceptions.ServiceException;
 import com.example.demo.model.Board;
 import com.example.demo.model.Player;
 
+import java.util.List;
+
 
 public interface IGameService {
     Board getBoard(int boardId) throws ServiceException, DaoException;
+
+    Board[] getBoardList() throws ServiceException, DaoException;
 
     int saveBoard(Board board) throws ServiceException, DaoException;
 

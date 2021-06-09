@@ -12,6 +12,8 @@ import com.example.demo.service.interfaces.IGameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GameService implements IGameService {
     private final IBoardDao boardDao;
@@ -35,6 +37,11 @@ public class GameService implements IGameService {
         }
 
         return board;
+    }
+
+    @Override
+    public Board[] getBoardList(){
+        return boardDao.getBoardList();
     }
 
     @Override
