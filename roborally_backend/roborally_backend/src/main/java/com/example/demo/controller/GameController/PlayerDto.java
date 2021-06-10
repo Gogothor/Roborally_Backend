@@ -7,6 +7,8 @@ public class PlayerDto {
     private String playerColor;
     private Integer x;
     private Integer y;
+    private UserDto user;
+
 
     public Integer getBoardId() {
         return boardId;
@@ -54,5 +56,13 @@ public class PlayerDto {
 
     public void setY(Integer y) {
         this.y = y;
+    }
+
+    public UserDto getUser() {
+        return user;
+    }
+
+    public void setUser(UserDto user) {
+        this.user = user;
     }
 }
