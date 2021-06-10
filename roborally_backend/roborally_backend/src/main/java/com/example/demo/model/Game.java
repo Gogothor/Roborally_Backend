@@ -1,6 +1,9 @@
-package com.example.demo.controller.GameController;
+package com.example.demo.model;
 
-public class GameDto {
+import com.example.demo.controller.GameController.BoardDto;
+import com.example.demo.controller.GameController.UserDto;
+
+public class Game {
     private Integer gameID;
     private UserDto[] users;
     private BoardDto board;

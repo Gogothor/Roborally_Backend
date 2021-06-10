@@ -4,6 +4,7 @@ import com.example.demo.exceptions.DaoException;
 import com.example.demo.exceptions.MappingException;
 import com.example.demo.exceptions.ServiceException;
 import com.example.demo.model.Board;
+import com.example.demo.model.Game;
 import com.example.demo.model.Player;
 import com.example.demo.model.Space;
 import com.example.demo.service.interfaces.IGameService;
@@ -34,7 +35,10 @@ public class GameController {
 
         return new ResponseEntity<>(dtoMapper.convertToDto(board), HttpStatus.OK);
     }
-
+    /**
+     * get List of boards
+     * @return an array of BoardDto's wrapped in a http response
+     */
     @GetMapping("/board/all")
     public ResponseEntity<BoardDto[]> getBoardList() throws ServiceException, MappingException, DaoException{
         Board[] boards = gameService.getBoardList();
@@ -46,7 +50,21 @@ public class GameController {
 
         return new ResponseEntity<>(boardDtos, HttpStatus.OK);
     }
+    /**
+     * get List of boards
+     * @return an array of BoardDto's wrapped in a http response
+     */
+    @GetMapping("/games")
+    public ResponseEntity<GameDto[]> getGameList() throws ServiceException, MappingException, DaoException{
+        Game[] games = null; //TODO make gameService.getGameList();
+        GameDto[] gameDtos = new GameDto[games.length];
 
+        for (int i = 0; i < games.length ; i++) {
+            gameDtos[i] = null; //TODO make dtoMapper.convertToDto(games[i]);
+        }
+
+        return new ResponseEntity<>(gameDtos, HttpStatus.OK);
+    }
     /**
      * Get current player of a board
      * @param boardId The board we want to get the current player from
