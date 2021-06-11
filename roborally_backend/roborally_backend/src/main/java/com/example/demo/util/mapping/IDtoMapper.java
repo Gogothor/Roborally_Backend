@@ -1,23 +1,28 @@
 package com.example.demo.util.mapping;
 
 import com.example.demo.controller.GameController.BoardDto;
+import com.example.demo.controller.GameController.GameDto;
 import com.example.demo.controller.GameController.PlayerDto;
 import com.example.demo.controller.GameController.SpaceDto;
 import com.example.demo.exceptions.MappingException;
-import com.example.demo.model.Board;
+import com.example.demo.model.Game;
 import com.example.demo.model.Player;
 import com.example.demo.model.Space;
 
 public interface IDtoMapper {
     PlayerDto convertToDto(Player player) throws MappingException;
 
-    BoardDto convertToDto(Board board) throws MappingException;
+    BoardDto convertToDto(com.example.demo.model.Board board) throws MappingException;
+
+    GameDto convertToDto(Game game) throws MappingException;
 
     SpaceDto convertToDto(Space space) throws MappingException;
 
-    Board convertToEntity(BoardDto boardDto);
+    com.example.demo.model.Board convertToEntity(BoardDto boardDto);
 
-    Space convertToEntity(SpaceDto spaceDto, Board board);
+    Space convertToEntity(SpaceDto spaceDto, com.example.demo.model.Board board);
 
-    Player convertToEntity(PlayerDto playerDto, Board board) throws MappingException;
+    Player convertToEntity(PlayerDto playerDto, com.example.demo.model.Board board) throws MappingException;
+
+    //TODO convertToEntity game
 }

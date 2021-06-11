@@ -3,6 +3,7 @@ package com.example.demo.service.interfaces;
 import com.example.demo.exceptions.DaoException;
 import com.example.demo.exceptions.ServiceException;
 import com.example.demo.model.Board;
+import com.example.demo.model.Game;
 import com.example.demo.model.Player;
 
 import java.util.List;
@@ -12,6 +13,10 @@ public interface IGameService {
     Board getBoard(int boardId) throws ServiceException, DaoException;
 
     Board[] getBoardList() throws ServiceException, DaoException;
+
+    Game[] getGameList() throws ServiceException, DaoException;
+
+    int createGame() throws ServiceException, DaoException;
 
     int saveBoard(Board board) throws ServiceException, DaoException;
 

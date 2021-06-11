@@ -3,7 +3,7 @@ package com.example.demo.controller.GameController;
 public class GameDto {
     private Integer gameID;
     private UserDto[] users;
-    private BoardDto board;
+    private BoardDto boardDto;
     private boolean hasBegun;
 
     public Integer getGameID() {
@@ -23,11 +23,11 @@ public class GameDto {
     }
 
     public BoardDto getBoard() {
-        return board;
+        return boardDto;
     }
 
-    public void setBoard(BoardDto board) {
-        this.board = board;
+    public void setBoard(BoardDto boardDto) {
+        this.boardDto = boardDto;
     }
 
     public boolean isHasBegun() {

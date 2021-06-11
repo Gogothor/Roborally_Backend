@@ -6,8 +6,18 @@ import com.example.demo.controller.GameController.UserDto;
 public class Game {
     private Integer gameID;
     private UserDto[] users;
-    private BoardDto board;
+    private Board board;
     private boolean hasBegun;
+
+    public Game(){
+
+    }
+    public Game(UserDto[] users, Board board, boolean hasBegun){
+        this.users = users;
+        this.board = board;
+        this.hasBegun = hasBegun;
+
+    }
 
     public Integer getGameID() {
         return gameID;
@@ -25,11 +35,11 @@ public class Game {
         this.users = users;
     }
 
-    public BoardDto getBoard() {
+    public Board getBoard() {
         return board;
     }
 
-    public void setBoard(BoardDto board) {
+    public void setBoard(Board board) {
         this.board = board;
     }
 

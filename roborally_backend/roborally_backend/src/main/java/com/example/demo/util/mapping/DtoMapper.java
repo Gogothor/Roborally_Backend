@@ -1,10 +1,11 @@
 package com.example.demo.util.mapping;
 
 import com.example.demo.controller.GameController.BoardDto;
+import com.example.demo.controller.GameController.GameDto;
 import com.example.demo.controller.GameController.PlayerDto;
 import com.example.demo.controller.GameController.SpaceDto;
 import com.example.demo.exceptions.MappingException;
-import com.example.demo.model.Board;
+import com.example.demo.model.Game;
 import com.example.demo.model.Player;
 import com.example.demo.model.Space;
 import org.springframework.stereotype.Service;
@@ -30,9 +31,9 @@ public class DtoMapper implements IDtoMapper {
     }
 
 
-    public BoardDto convertToDto(Board board) throws MappingException {
+    public BoardDto convertToDto(com.example.demo.model.Board board) throws MappingException {
         if(board == null){
-            throw new MappingException("Board was null");
+            throw new MappingException("BoardDto was null");
         }
         BoardDto boardDto = new BoardDto();
         boardDto.setBoardId(board.getGameId());
@@ -63,6 +64,20 @@ public class DtoMapper implements IDtoMapper {
         return boardDto;
     }
 
+    public GameDto convertToDto(Game game) throws MappingException {
+        if(game == null){
+            throw new MappingException("Game was null");
+        }
+        GameDto gameDto = new GameDto();
+        gameDto.setGameID(game.getGameID());
+        gameDto.setUsers(game.getUsers());
+        gameDto.setBoard(convertToDto(game.getBoard()));
+        gameDto.setHasBegun(game.isHasBegun());
+
+
+        return gameDto;
+    }
+
     public SpaceDto convertToDto(Space space) throws MappingException {
         if(space == null){
             throw new MappingException("Space was null");
@@ -76,24 +91,24 @@ public class DtoMapper implements IDtoMapper {
         return spaceDto;
     }
 
-    public Board convertToEntity(BoardDto boardDto) {
-        Board board = new Board(boardDto.getWidth(), boardDto.getHeight(), boardDto.getBoardName());
+    public com.example.demo.model.Board convertToEntity(BoardDto boardDto) {
+        com.example.demo.model.Board board = new com.example.demo.model.Board(boardDto.getWidth(), boardDto.getHeight(), boardDto.getBoardName());
         if (boardDto.getBoardId() != -1) {
             board.setGameId(boardDto.getBoardId());
         }
         return board;
     }
 
-    public Space convertToEntity(SpaceDto spaceDto, Board board) {
+    public Space convertToEntity(SpaceDto spaceDto, com.example.demo.model.Board board) {
         return new Space(board, spaceDto.getX(), spaceDto.getY());
     }
 
-    public Player convertToEntity(PlayerDto playerDto, Board board) throws MappingException {
+    public Player convertToEntity(PlayerDto playerDto, com.example.demo.model.Board board) throws MappingException {
         if (playerDto.getBoardId() == null) { //We cant have a player without a board id
             throw new MappingException("PlayerDto did not contain a board id");
         }
         if (board == null) { //Incase the provided board id is invalid
-            throw new MappingException("Board was null when trying to convert PlayerDto to Player");
+            throw new MappingException("BoardDto was null when trying to convert PlayerDto to Player");
         }
         if (playerDto.getPlayerId() == null) { //If we have not provided a player id, we are creating a new player
             return new Player(board, playerDto.getPlayerColor(), playerDto.getPlayerName());
