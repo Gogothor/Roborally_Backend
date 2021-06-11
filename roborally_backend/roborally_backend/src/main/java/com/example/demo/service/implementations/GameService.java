@@ -16,7 +16,9 @@ import com.example.demo.service.interfaces.IGameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GameService implements IGameService {
@@ -24,6 +26,15 @@ public class GameService implements IGameService {
     private final IBoardDao boardDao;
     private final ISpaceDao spaceDao;
     private final IPlayerDao playerDao;
+    private final Board[] boards2 = {
+            new Board(8, 8, "default")
+    };
+
+    static final Map<String, Board> boards = Map.of(
+            "board 1", new Board(8, 8, "board 1"),
+            "board 2", new Board(8, 12, "board 2"),
+            "board 3", new Board(8,16, "board 3")
+    );
 
     public GameService(IGameDao gameDao, IBoardDao boardDao, ISpaceDao spaceDao, IPlayerDao playerDao) {
         this.boardDao = boardDao;
@@ -56,9 +67,9 @@ public class GameService implements IGameService {
     }
 
     @Override
-    public int createGame() throws ServiceException, DaoException {
-        int boardID = boardDao.createBoard(new Board(8, 8, "default"));
-        Game game = new Game(new UserDto[6], boardDao.getBoard(boardID), false);
+    public int createGame(Integer numOfPlayers, String boardChoice) throws ServiceException, DaoException {
+        int boardID = saveBoard(boards.get(boardChoice));
+        Game game = new Game(new UserDto[numOfPlayers], boardDao.getBoard(boardID), false);
         return gameDao.createGame(game);
     }
 

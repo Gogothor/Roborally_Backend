@@ -16,7 +16,7 @@ public interface IGameService {
 
     Game[] getGameList() throws ServiceException, DaoException;
 
-    int createGame() throws ServiceException, DaoException;
+    int createGame(Integer numOfPlayers, String boardChoice) throws ServiceException, DaoException;
 
     int saveBoard(Board board) throws ServiceException, DaoException;
 

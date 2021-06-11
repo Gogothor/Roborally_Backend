@@ -11,12 +11,14 @@ import com.example.demo.util.mapping.IDtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", methods = {GET, POST, PUT, DELETE})
 public class GameController {
     private final IGameService gameService;
     private final IDtoMapper dtoMapper;
@@ -67,10 +69,10 @@ public class GameController {
         return new ResponseEntity<>(gameDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/games/createGame")
-    public ResponseEntity<Integer> createGame() throws ServiceException, MappingException, DaoException{
+    @PutMapping("/games/createGame")
+    public ResponseEntity<Integer> createGame(@RequestBody() Integer numOfPlayers, @RequestBody String boardChoice) throws ServiceException, MappingException, DaoException{
 
-        int gameID = gameService.createGame();
+        int gameID = gameService.createGame(numOfPlayers, boardChoice);
 
         return new ResponseEntity<>(gameID, HttpStatus.OK);
     }
