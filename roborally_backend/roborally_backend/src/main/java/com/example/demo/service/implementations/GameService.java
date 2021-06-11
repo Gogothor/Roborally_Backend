@@ -2,16 +2,10 @@ package com.example.demo.service.implementations;
 
 import com.example.demo.controller.GameController.GameDto;
 import com.example.demo.controller.GameController.UserDto;
-import com.example.demo.dal.interfaces.IBoardDao;
-import com.example.demo.dal.interfaces.IGameDao;
-import com.example.demo.dal.interfaces.IPlayerDao;
-import com.example.demo.dal.interfaces.ISpaceDao;
+import com.example.demo.dal.interfaces.*;
 import com.example.demo.exceptions.DaoException;
 import com.example.demo.exceptions.ServiceException;
-import com.example.demo.model.Board;
-import com.example.demo.model.Game;
-import com.example.demo.model.Player;
-import com.example.demo.model.Space;
+import com.example.demo.model.*;
 import com.example.demo.service.interfaces.IGameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,6 +20,7 @@ public class GameService implements IGameService {
     private final IBoardDao boardDao;
     private final ISpaceDao spaceDao;
     private final IPlayerDao playerDao;
+    private final IUserDao userDao;
     private final Board[] boards2 = {
             new Board(8, 8, "default")
     };
@@ -36,11 +31,12 @@ public class GameService implements IGameService {
             "board 3", new Board(8,16, "board 3")
     );
 
-    public GameService(IGameDao gameDao, IBoardDao boardDao, ISpaceDao spaceDao, IPlayerDao playerDao) {
+    public GameService(IGameDao gameDao, IBoardDao boardDao, ISpaceDao spaceDao, IPlayerDao playerDao, IUserDao userDao) {
         this.boardDao = boardDao;
         this.spaceDao = spaceDao;
         this.playerDao = playerDao;
         this.gameDao = gameDao;
+        this.userDao = userDao;
     }
 
     @Override
@@ -170,6 +166,24 @@ public class GameService implements IGameService {
         int nextPlayerNumber = (currentPlayerNumber + 1) % amountOfPlayers;
         board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
         boardDao.updateBoard(board, board.getGameId());
+    }
+
+    @Override
+    public User createUser(String username) throws ServiceException, DaoException {
+        User createUser = new User();
+        createUser.setUserName(username);
+        int userID = userDao.createUser(createUser);
+        return userDao.getUser(userID);
+    }
+
+    @Override
+    public User getUser(int userID) throws ServiceException, DaoException {
+        return userDao.getUser(userID);
+    }
+
+    @Override
+    public User getUser(String username) throws ServiceException, DaoException {
+        return userDao.getUser(username);
     }
 
 

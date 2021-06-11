@@ -5,6 +5,7 @@ import com.example.demo.exceptions.ServiceException;
 import com.example.demo.model.Board;
 import com.example.demo.model.Game;
 import com.example.demo.model.Player;
+import com.example.demo.model.User;
 
 import java.util.List;
 
@@ -31,4 +32,10 @@ public interface IGameService {
     void movePlayer(Board board, int x, int y, int playerId) throws DaoException;
 
     void switchCurrentPlayer(int boardId) throws ServiceException, DaoException;
+
+    User createUser(String username) throws ServiceException, DaoException;
+
+    User getUser(int userID) throws ServiceException, DaoException;
+
+    User getUser(String username) throws ServiceException, DaoException;
 }

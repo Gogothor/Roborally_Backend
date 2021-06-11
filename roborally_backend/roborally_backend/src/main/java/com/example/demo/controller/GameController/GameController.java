@@ -6,6 +6,7 @@ import com.example.demo.exceptions.ServiceException;
 import com.example.demo.model.Game;
 import com.example.demo.model.Player;
 import com.example.demo.model.Space;
+import com.example.demo.model.User;
 import com.example.demo.service.interfaces.IGameService;
 import com.example.demo.util.mapping.IDtoMapper;
 import org.springframework.http.HttpStatus;
@@ -157,5 +158,19 @@ public class GameController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/users")
+    public ResponseEntity<UserDto> createOrGetUser(@RequestBody String userName) throws ServiceException, DaoException, MappingException {
+        User user = gameService.getUser(userName);
+        if (user == null) {
+            user = gameService.createUser(userName);
+        }
+        return new ResponseEntity<>(dtoMapper.convertToDto(user), HttpStatus.OK);
+    }
+
+    @PostMapping("/games/{gameID}/joinGame")
+    public ResponseEntity<Boolean> joinGame(@PathVariable("gameID") int gameID) throws ServiceException, DaoException{
+        //todo
+        return null;
+    }
 
 }
