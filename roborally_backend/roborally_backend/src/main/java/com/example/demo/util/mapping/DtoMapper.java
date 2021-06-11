@@ -2,16 +2,13 @@ package com.example.demo.util.mapping;
 
 import com.example.demo.controller.GameController.*;
 import com.example.demo.exceptions.MappingException;
-import com.example.demo.model.Game;
-import com.example.demo.model.Player;
-import com.example.demo.model.Space;
-import com.example.demo.model.User;
+import com.example.demo.model.*;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DtoMapper implements IDtoMapper {
     public PlayerDto convertToDto(Player player) throws MappingException {
-        if(player == null){
+        if (player == null) {
             throw new MappingException("Player was null");
         }
         PlayerDto playerDto = new PlayerDto();
@@ -29,8 +26,8 @@ public class DtoMapper implements IDtoMapper {
     }
 
 
-    public BoardDto convertToDto(com.example.demo.model.Board board) throws MappingException {
-        if(board == null){
+    public BoardDto convertToDto(Board board) throws MappingException {
+        if (board == null) {
             throw new MappingException("BoardDto was null");
         }
         BoardDto boardDto = new BoardDto();
@@ -43,8 +40,8 @@ public class DtoMapper implements IDtoMapper {
             boardDto.setCurrentPlayerDto(convertToDto(board.getCurrentPlayer()));
         }
 
+        boardDto.setPlayerDtos(new PlayerDto[board.getPlayersNumber()]);
         if (board.getPlayersNumber() > 0) {
-            boardDto.setPlayerDtos(new PlayerDto[board.getPlayersNumber()]);
             for (int i = 0; i < board.getPlayersNumber(); i++) {
                 boardDto.getPlayerDtos()[i] = convertToDto(board.getPlayer(i));
             }
@@ -63,7 +60,7 @@ public class DtoMapper implements IDtoMapper {
     }
 
     public GameDto convertToDto(Game game) throws MappingException {
-        if(game == null){
+        if (game == null) {
             throw new MappingException("Game was null");
         }
         GameDto gameDto = new GameDto();
@@ -85,7 +82,7 @@ public class DtoMapper implements IDtoMapper {
     }
 
     public SpaceDto convertToDto(Space space) throws MappingException {
-        if(space == null){
+        if (space == null) {
             throw new MappingException("Space was null");
         }
         SpaceDto spaceDto = new SpaceDto();
@@ -99,7 +96,7 @@ public class DtoMapper implements IDtoMapper {
 
     @Override
     public UserDto convertToDto(User user) throws MappingException {
-        if(user == null){
+        if (user == null) {
             throw new MappingException("user was null");
         }
         UserDto userDto = new UserDto();
@@ -108,10 +105,13 @@ public class DtoMapper implements IDtoMapper {
         return userDto;
     }
 
-    public com.example.demo.model.Board convertToEntity(BoardDto boardDto) {
-        com.example.demo.model.Board board = new com.example.demo.model.Board(boardDto.getWidth(), boardDto.getHeight(), boardDto.getBoardName());
+    public Board convertToEntity(BoardDto boardDto) throws MappingException {
+        Board board = new Board(boardDto.getWidth(), boardDto.getHeight(), boardDto.getBoardName());
         if (boardDto.getBoardId() != -1) {
             board.setGameId(boardDto.getBoardId());
+        }
+        for(PlayerDto playerDto : boardDto.getPlayerDtos()){
+            board.addPlayer(convertToEntity(playerDto, board));
         }
         return board;
     }
@@ -135,7 +135,7 @@ public class DtoMapper implements IDtoMapper {
 
     public Game convertToEntity(GameDto gameDto) throws MappingException {
         Game game = new Game();
-        if(gameDto.getGameID() == null){
+        if (gameDto.getGameID() == null) {
             throw new MappingException("gameDto does not have a gameID to get");
         }
         return null;
@@ -143,7 +143,7 @@ public class DtoMapper implements IDtoMapper {
 
     @Override
     public com.example.demo.model.User convertToEntity(UserDto userDto) throws MappingException {
-        if(userDto == null){
+        if (userDto == null) {
             throw new MappingException("user was null");
         }
         com.example.demo.model.User user = new com.example.demo.model.User();

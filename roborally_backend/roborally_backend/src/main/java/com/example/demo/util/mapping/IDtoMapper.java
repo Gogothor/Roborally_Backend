@@ -17,7 +17,7 @@ public interface IDtoMapper {
 
     UserDto convertToDto(com.example.demo.model.User user) throws MappingException;
 
-    com.example.demo.model.Board convertToEntity(BoardDto boardDto);
+    com.example.demo.model.Board convertToEntity(BoardDto boardDto) throws MappingException;
 
     Space convertToEntity(SpaceDto spaceDto, com.example.demo.model.Board board);
 

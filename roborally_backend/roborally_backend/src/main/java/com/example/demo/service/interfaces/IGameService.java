@@ -40,4 +40,6 @@ public interface IGameService {
     User getUser(String username) throws ServiceException, DaoException;
 
     boolean joinGame(int gameID, User user) throws ServiceException, DaoException;
+
+    Game getGame(int gameID) throws ServiceException, DaoException;
 }

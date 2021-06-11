@@ -18,9 +18,6 @@ public class GameService implements IGameService {
     private final ISpaceDao spaceDao;
     private final IPlayerDao playerDao;
     private final IUserDao userDao;
-    private final Board[] boards2 = {
-            new Board(8, 8, "default")
-    };
 
     static final Map<String, Board> boards = Map.of(
             "board 1", new Board(8, 8, "board 1"),
@@ -62,7 +59,21 @@ public class GameService implements IGameService {
     @Override
     public int createGame(Integer numOfPlayers, String boardChoice) throws ServiceException, DaoException {
         int boardID = saveBoard(boards.get(boardChoice));
-        Game game = new Game(new User[numOfPlayers], boardDao.getBoard(boardID), false);
+        Board board = getBoard(boardID);
+
+        Game game = new Game(new User[numOfPlayers], board, true);
+
+        Player player = new Player(board, "blue", "Player1Name");
+        addPlayer(board.getGameId(), player);
+
+        setCurrentPlayer(board.getGameId(), player.getPlayerId());
+        moveCurrentPlayer(board.getGameId(), 1, 1);
+
+        player = new Player(board, "green", "Player2Name");
+        addPlayer(board.getGameId(), player);
+
+        movePlayer(board, 4, 4, player.getPlayerId());
+
         return gameDao.createGame(game);
     }
 
@@ -73,6 +84,9 @@ public class GameService implements IGameService {
             throw new ServiceException("BoardDao generated invalid boardId " + savedBoardId, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         spaceDao.createSpaces(savedBoardId, board.getSpaces());
+
+
+
         return savedBoardId;
     }
 
@@ -166,27 +180,33 @@ public class GameService implements IGameService {
     }
 
     @Override
-    public com.example.demo.model.User createUser(String username) throws ServiceException, DaoException {
-        com.example.demo.model.User createUser = new com.example.demo.model.User();
+    public User createUser(String username) throws ServiceException, DaoException {
+        User createUser = new com.example.demo.model.User();
         createUser.setUserName(username);
         int userID = userDao.createUser(createUser);
         return userDao.getUser(userID);
     }
 
     @Override
-    public com.example.demo.model.User getUser(int userID) throws ServiceException, DaoException {
+    public User getUser(int userID) throws ServiceException, DaoException {
         return userDao.getUser(userID);
     }
 
     @Override
-    public com.example.demo.model.User getUser(String username) throws ServiceException, DaoException {
+    public User getUser(String username) throws ServiceException, DaoException {
         return userDao.getUser(username);
     }
 
     @Override
     public boolean joinGame(int gameID, User user) throws ServiceException, DaoException {
         Game game = gameDao.getGame(gameID);
+
         return game.addUser(user);
+    }
+
+    @Override
+    public Game getGame(int gameID) throws ServiceException, DaoException {
+        return gameDao.getGame(gameID);
     }
 
 
