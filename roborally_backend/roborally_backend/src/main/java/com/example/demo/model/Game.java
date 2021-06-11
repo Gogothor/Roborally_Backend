@@ -1,18 +1,18 @@
 package com.example.demo.model;
 
-import com.example.demo.controller.GameController.BoardDto;
 import com.example.demo.controller.GameController.UserDto;
 
 public class Game {
     private Integer gameID;
-    private UserDto[] users;
+    private User[] users;
     private Board board;
     private boolean hasBegun;
 
-    public Game(){
+    public Game() {
 
     }
-    public Game(UserDto[] users, Board board, boolean hasBegun){
+
+    public Game(User[] users, Board board, boolean hasBegun) {
         this.users = users;
         this.board = board;
         this.hasBegun = hasBegun;
@@ -27,12 +27,22 @@ public class Game {
         this.gameID = gameID;
     }
 
-    public UserDto[] getUsers() {
+    public User[] getUsers() {
         return users;
     }
 
-    public void setUsers(UserDto[] users) {
+    public void setUsers(User[] users) {
         this.users = users;
+    }
+
+    public boolean addUser(com.example.demo.model.User user) {
+        for (int i = 0; i < users.length; i++) {
+            if (users[i] == null) {
+                users[i] = user;
+                return true;
+            }
+        }
+        return false;
     }
 
     public Board getBoard() {

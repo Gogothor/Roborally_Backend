@@ -5,7 +5,6 @@ import com.example.demo.exceptions.MappingException;
 import com.example.demo.model.Game;
 import com.example.demo.model.Player;
 import com.example.demo.model.Space;
-import com.example.demo.model.User;
 
 public interface IDtoMapper {
     PlayerDto convertToDto(Player player) throws MappingException;
@@ -16,7 +15,7 @@ public interface IDtoMapper {
 
     SpaceDto convertToDto(Space space) throws MappingException;
 
-    UserDto convertToDto(User user) throws MappingException;
+    UserDto convertToDto(com.example.demo.model.User user) throws MappingException;
 
     com.example.demo.model.Board convertToEntity(BoardDto boardDto);
 
@@ -26,5 +25,5 @@ public interface IDtoMapper {
 
     Game convertToEntity(GameDto gameDto) throws MappingException;
 
-    User convertToEntity(UserDto userDto) throws MappingException;
+    com.example.demo.model.User convertToEntity(UserDto userDto) throws MappingException;
 }

@@ -68,7 +68,15 @@ public class DtoMapper implements IDtoMapper {
         }
         GameDto gameDto = new GameDto();
         gameDto.setGameID(game.getGameID());
-        gameDto.setUsers(game.getUsers());
+        User[] users = game.getUsers();
+        UserDto[] userDto = new UserDto[users.length];
+        for (int i = 0; i < userDto.length; i++) {
+            if (users[i] != null) {
+                userDto[i] = convertToDto(users[i]);
+            }
+        }
+
+        gameDto.setUsers(userDto);
         gameDto.setBoard(convertToDto(game.getBoard()));
         gameDto.setHasBegun(game.isHasBegun());
 
@@ -134,11 +142,11 @@ public class DtoMapper implements IDtoMapper {
     }
 
     @Override
-    public User convertToEntity(UserDto userDto) throws MappingException {
+    public com.example.demo.model.User convertToEntity(UserDto userDto) throws MappingException {
         if(userDto == null){
             throw new MappingException("user was null");
         }
-        User user = new User();
+        com.example.demo.model.User user = new com.example.demo.model.User();
         user.setUserName(userDto.getUserName());
         user.setUserID(userDto.getUserID());
         return user;
