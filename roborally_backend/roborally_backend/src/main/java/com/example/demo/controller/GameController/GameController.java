@@ -4,6 +4,7 @@ import com.example.demo.exceptions.DaoException;
 import com.example.demo.exceptions.MappingException;
 import com.example.demo.exceptions.ServiceException;
 import com.example.demo.model.Board;
+import com.example.demo.model.Game;
 import com.example.demo.model.Player;
 import com.example.demo.model.Space;
 import com.example.demo.service.interfaces.IGameService;
@@ -11,9 +12,14 @@ import com.example.demo.util.mapping.IDtoMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", methods = {GET, POST, PUT, DELETE})
 public class GameController {
     private final IGameService gameService;
     private final IDtoMapper dtoMapper;
@@ -34,18 +40,43 @@ public class GameController {
 
         return new ResponseEntity<>(dtoMapper.convertToDto(board), HttpStatus.OK);
     }
-
+    /**
+     * get List of boards
+     * @return an array of BoardDto's wrapped in a http response
+     */
     @GetMapping("/board/all")
     public ResponseEntity<BoardDto[]> getBoardList() throws ServiceException, MappingException, DaoException{
-        Board[] boards = gameService.getBoardList();
-        BoardDto[] boardDtos = new BoardDto[boards.length];
+        com.example.demo.model.Board[] boards = gameService.getBoardList();
+        BoardDto[] boardDtoDtos = new BoardDto[boards.length];
 
         for (int i = 0; i < boards.length ; i++) {
-            boardDtos[i] = dtoMapper.convertToDto(boards[i]);
+            boardDtoDtos[i] = dtoMapper.convertToDto(boards[i]);
         }
 
-        return new ResponseEntity<>(boardDtos, HttpStatus.OK);
+        return new ResponseEntity<>(boardDtoDtos, HttpStatus.OK);
     }
+    /**
+     * get List of games
+     * @return an array of BoardDto's wrapped in a http response
+     */
+    @GetMapping("/games")
+    public ResponseEntity<GameDto[]> getGameList() throws ServiceException, MappingException, DaoException{
+        Game[] games = gameService.getGameList();
+        GameDto[] gameDtos = new GameDto[games.length];
+
+        for (int i = 0; i < games.length ; i++) {
+            gameDtos[i] = dtoMapper.convertToDto(games[i]);
+        }
+        return new ResponseEntity<>(gameDtos, HttpStatus.OK);
+    }
+
+    @PostMapping("/games/createGame")
+    public ResponseEntity<Integer> createGame(@RequestBody CreateGameRequest request) throws ServiceException, MappingException, DaoException{
+        int gameID = gameService.createGame(request.getNumOfPlayers(), request.getBoardChoice());
+
+        return new ResponseEntity<>(gameID, HttpStatus.OK);
+    }
+
 
     /**
      * Get current player of a board
@@ -80,7 +111,7 @@ public class GameController {
      * @return id of the newly created board
      */
     @PostMapping("/board")
-    public ResponseEntity<Integer> createBoard(@RequestBody BoardDto boardDTO) throws ServiceException, DaoException {
+    public ResponseEntity<Integer> createBoard(@RequestBody BoardDto boardDTO) throws ServiceException, DaoException, MappingException {
         Board board = dtoMapper.convertToEntity(boardDTO);
         int boardId = gameService.saveBoard(board);
         return new ResponseEntity<>(boardId, HttpStatus.CREATED);
@@ -126,5 +157,25 @@ public class GameController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("/users")
+    public ResponseEntity<UserDto> createOrGetUser(@RequestBody String userName) throws ServiceException, DaoException, MappingException {
+        com.example.demo.model.User user = gameService.getUser(userName);
+        if (user == null) {
+            user = gameService.createUser(userName);
+        }
+        return new ResponseEntity<>(dtoMapper.convertToDto(user), HttpStatus.OK);
+    }
 
+    @PostMapping("/games/{gameID}/joinGame")
+    public ResponseEntity<Boolean> joinGame(@PathVariable("gameID") int gameID, @RequestBody com.example.demo.model.User user) throws ServiceException, DaoException{
+        boolean succes = gameService.joinGame(gameID, user);
+        return new ResponseEntity<>(succes, HttpStatus.OK);
+    }
+
+    @GetMapping("/games/{gameID}")
+    public ResponseEntity<GameDto> getGame(@PathVariable int gameID) throws ServiceException, MappingException, DaoException{
+        Game game = gameService.getGame(gameID);
+
+        return new ResponseEntity<>(dtoMapper.convertToDto(game), HttpStatus.OK);
+    }
 }

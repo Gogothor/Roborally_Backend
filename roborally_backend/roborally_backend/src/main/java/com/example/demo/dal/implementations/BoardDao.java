@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Repository
 public class BoardDao implements IBoardDao {
-    //BoardId, Board
+    //BoardId, BoardDto
     static final HashMap<Integer, Board> boards = new HashMap<>();
     static private int boardIdCounter = 0;
 

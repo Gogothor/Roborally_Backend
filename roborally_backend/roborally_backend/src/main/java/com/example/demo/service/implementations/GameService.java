@@ -1,29 +1,36 @@
 package com.example.demo.service.implementations;
 
-import com.example.demo.dal.interfaces.IBoardDao;
-import com.example.demo.dal.interfaces.IPlayerDao;
-import com.example.demo.dal.interfaces.ISpaceDao;
+import com.example.demo.controller.GameController.UserDto;
+import com.example.demo.dal.interfaces.*;
 import com.example.demo.exceptions.DaoException;
 import com.example.demo.exceptions.ServiceException;
-import com.example.demo.model.Board;
-import com.example.demo.model.Player;
-import com.example.demo.model.Space;
+import com.example.demo.model.*;
 import com.example.demo.service.interfaces.IGameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Map;
 
 @Service
 public class GameService implements IGameService {
+    private final IGameDao gameDao;
     private final IBoardDao boardDao;
     private final ISpaceDao spaceDao;
     private final IPlayerDao playerDao;
+    private final IUserDao userDao;
 
-    public GameService(IBoardDao boardDao, ISpaceDao spaceDao, IPlayerDao playerDao) {
+    static final Map<String, Board> boards = Map.of(
+            "board 1", new Board(8, 8, "board 1"),
+            "board 2", new Board(8, 12, "board 2"),
+            "board 3", new Board(8, 16, "board 3")
+    );
+
+    public GameService(IGameDao gameDao, IBoardDao boardDao, ISpaceDao spaceDao, IPlayerDao playerDao, IUserDao userDao) {
         this.boardDao = boardDao;
         this.spaceDao = spaceDao;
         this.playerDao = playerDao;
+        this.gameDao = gameDao;
+        this.userDao = userDao;
     }
 
     @Override
@@ -40,8 +47,34 @@ public class GameService implements IGameService {
     }
 
     @Override
-    public Board[] getBoardList(){
+    public Board[] getBoardList() {
         return boardDao.getBoardList();
+    }
+
+    @Override
+    public Game[] getGameList() {
+        return gameDao.getGameList();
+    }
+
+    @Override
+    public int createGame(Integer numOfPlayers, String boardChoice) throws ServiceException, DaoException {
+        int boardID = saveBoard(boards.get(boardChoice));
+        Board board = getBoard(boardID);
+
+        Game game = new Game(new User[numOfPlayers], board, true);
+
+        Player player = new Player(board, "blue", "Player1Name");
+        addPlayer(board.getGameId(), player);
+
+        setCurrentPlayer(board.getGameId(), player.getPlayerId());
+        moveCurrentPlayer(board.getGameId(), 1, 1);
+
+        player = new Player(board, "green", "Player2Name");
+        addPlayer(board.getGameId(), player);
+
+        movePlayer(board, 4, 4, player.getPlayerId());
+
+        return gameDao.createGame(game);
     }
 
     @Override
@@ -51,6 +84,9 @@ public class GameService implements IGameService {
             throw new ServiceException("BoardDao generated invalid boardId " + savedBoardId, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         spaceDao.createSpaces(savedBoardId, board.getSpaces());
+
+
+
         return savedBoardId;
     }
 
@@ -141,6 +177,36 @@ public class GameService implements IGameService {
         int nextPlayerNumber = (currentPlayerNumber + 1) % amountOfPlayers;
         board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
         boardDao.updateBoard(board, board.getGameId());
+    }
+
+    @Override
+    public User createUser(String username) throws ServiceException, DaoException {
+        User createUser = new com.example.demo.model.User();
+        createUser.setUserName(username);
+        int userID = userDao.createUser(createUser);
+        return userDao.getUser(userID);
+    }
+
+    @Override
+    public User getUser(int userID) throws ServiceException, DaoException {
+        return userDao.getUser(userID);
+    }
+
+    @Override
+    public User getUser(String username) throws ServiceException, DaoException {
+        return userDao.getUser(username);
+    }
+
+    @Override
+    public boolean joinGame(int gameID, User user) throws ServiceException, DaoException {
+        Game game = gameDao.getGame(gameID);
+
+        return game.addUser(user);
+    }
+
+    @Override
+    public Game getGame(int gameID) throws ServiceException, DaoException {
+        return gameDao.getGame(gameID);
     }
 
 
