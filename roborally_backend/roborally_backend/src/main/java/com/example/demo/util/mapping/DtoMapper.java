@@ -115,4 +115,12 @@ public class DtoMapper implements IDtoMapper {
         }
         return null;
     }
+
+    public Game convertToEntity(GameDto gameDto) throws MappingException {
+        Game game = new Game();
+        if(gameDto.getGameID() == null){
+            throw new MappingException("gameDto does not have a gameID to get");
+        }
+        return null;
+    }
 }

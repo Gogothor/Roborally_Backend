@@ -24,5 +24,5 @@ public interface IDtoMapper {
 
     Player convertToEntity(PlayerDto playerDto, com.example.demo.model.Board board) throws MappingException;
 
-    //TODO convertToEntity game
+    Game convertToEntity(GameDto gameDto) throws MappingException;
 }

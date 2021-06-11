@@ -69,13 +69,14 @@ public class GameController {
         return new ResponseEntity<>(gameDtos, HttpStatus.OK);
     }
 
-    @PutMapping("/games/createGame")
-    public ResponseEntity<Integer> createGame(@RequestBody() Integer numOfPlayers, @RequestBody String boardChoice) throws ServiceException, MappingException, DaoException{
-
-        int gameID = gameService.createGame(numOfPlayers, boardChoice);
+    @PostMapping("/games/createGame")
+    public ResponseEntity<Integer> createGame(@RequestBody CreateGameRequest request) throws ServiceException, MappingException, DaoException{
+        Logger.getAnonymousLogger().log(Level.WARNING, "create game request received");
+        int gameID = gameService.createGame(request.getNumOfPlayers(), request.getBoardChoice());
 
         return new ResponseEntity<>(gameID, HttpStatus.OK);
     }
+
 
     /**
      * Get current player of a board
