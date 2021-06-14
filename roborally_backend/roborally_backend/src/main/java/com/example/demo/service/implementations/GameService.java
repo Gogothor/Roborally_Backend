@@ -9,10 +9,14 @@ import com.example.demo.service.interfaces.IGameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+
 
 @Service
 public class GameService implements IGameService {
+    final private List<String> PLAYER_COLORS = Arrays.asList("red", "green", "yellow", "blue", "orange", "pink");
     private final IGameDao gameDao;
     private final IBoardDao boardDao;
     private final ISpaceDao spaceDao;
@@ -62,17 +66,18 @@ public class GameService implements IGameService {
         Board board = getBoard(boardID);
 
         Game game = new Game(new User[numOfPlayers], board, true);
+        for (int i = 0; i <numOfPlayers ; i++) {
+            Player player = new Player(board, PLAYER_COLORS.get(i), "player haha " );
+            addPlayer(board.getGameId(), player);
+            player.setSpace(board.getSpace(i % board.width, i));
+      //      movePlayer(board, i % board.width, i, player.getPlayerId());
+            setCurrentPlayer(board.getGameId(), player.getPlayerId());
+        }
 
-        Player player = new Player(board, "blue", "Player1Name");
-        addPlayer(board.getGameId(), player);
-
-        setCurrentPlayer(board.getGameId(), player.getPlayerId());
-        moveCurrentPlayer(board.getGameId(), 1, 1);
-
-        player = new Player(board, "green", "Player2Name");
-        addPlayer(board.getGameId(), player);
-
-        movePlayer(board, 4, 4, player.getPlayerId());
+//        player = new Player(board, "green", "Player2Name");
+//        addPlayer(board.getGameId(), player);
+//
+//        movePlayer(board, 4, 4, player.getPlayerId());
 
         return gameDao.createGame(game);
     }
