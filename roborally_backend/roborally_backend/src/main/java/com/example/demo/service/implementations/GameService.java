@@ -152,7 +152,7 @@ public class GameService implements IGameService {
         if (currentPlayer == null) {
             throw new ServiceException("The board " + boardId + " has no current player", HttpStatus.BAD_REQUEST);
         }
-        if (x < 0 || y < 0 || x > board.height || y > board.width) {
+        if (x < 0 || y < 0 || y > board.height || x > board.width) {
             throw new ServiceException("Space coordinates (" + x + "," + y + ") were invalid for board" + boardId, HttpStatus.BAD_REQUEST);
         }
         Space targetSpace = board.getSpace(x, y);
