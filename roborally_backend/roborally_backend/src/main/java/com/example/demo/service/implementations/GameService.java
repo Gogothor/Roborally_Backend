@@ -70,16 +70,11 @@ public class GameService implements IGameService {
             Player player = new Player(board, PLAYER_COLORS.get(i), "player haha " );
             addPlayer(board.getGameId(), player);
             player.setSpace(board.getSpace(i % board.width, i));
-      //      movePlayer(board, i % board.width, i, player.getPlayerId());
             if (i == 0) {
                 setCurrentPlayer(board.getGameId(), player.getPlayerId());
             }
         }
 
-//        player = new Player(board, "green", "Player2Name");
-//        addPlayer(board.getGameId(), player);
-//
-//        movePlayer(board, 4, 4, player.getPlayerId());
 
         return gameDao.createGame(game);
     }
