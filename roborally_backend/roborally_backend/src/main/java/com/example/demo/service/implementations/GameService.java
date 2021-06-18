@@ -201,6 +201,7 @@ public class GameService implements IGameService {
 
     @Override
     public boolean joinGame(int gameID, User user) throws ServiceException, DaoException {
+        if (user.getUserName().equals("")) {return false;}
         Game game = gameDao.getGame(gameID);
 
         return game.addUser(user);
