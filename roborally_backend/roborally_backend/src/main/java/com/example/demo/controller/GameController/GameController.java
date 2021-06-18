@@ -178,4 +178,10 @@ public class GameController {
 
         return new ResponseEntity<>(dtoMapper.convertToDto(game), HttpStatus.OK);
     }
+
+    @DeleteMapping("/games/{gameID}/delete")
+    public ResponseEntity<Void> deleteGame(@PathVariable int gameID) throws ServiceException, MappingException, DaoException{
+        gameService.deleteGame(gameID);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

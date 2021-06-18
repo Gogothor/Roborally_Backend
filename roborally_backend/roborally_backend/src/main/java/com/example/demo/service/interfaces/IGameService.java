@@ -42,4 +42,6 @@ public interface IGameService {
     boolean joinGame(int gameID, User user) throws ServiceException, DaoException;
 
     Game getGame(int gameID) throws ServiceException, DaoException;
+
+    void deleteGame(int gameID) throws ServiceException, DaoException;
 }

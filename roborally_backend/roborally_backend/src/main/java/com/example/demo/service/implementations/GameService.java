@@ -211,5 +211,10 @@ public class GameService implements IGameService {
         return gameDao.getGame(gameID);
     }
 
+    @Override
+    public void deleteGame(int gameID) throws ServiceException, DaoException {
+        gameDao.deleteGame(gameID);
+    }
+
 
 }
